@@ -15,7 +15,7 @@ fluidPage(
                   max = 100,
                   value = 30)
     ),
-    
+    actionButton("button", "an action button"),
     # Show a plot of the generated distribution
     mainPanel(
       plotOutput("distPlot")
