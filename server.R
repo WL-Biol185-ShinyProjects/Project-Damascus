@@ -12,6 +12,13 @@ shinyServer(function(input, output) {
     # draw the histogram with the specified number of bins
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
     
-  })
+    function(input, output, session) {
+      observeEvent(input$do, {
+        session$sendCustomMessage(type = 'testmessage',
+                                  message = 'Thank you for clicking')
+      })
+  }
   
+})
+
 })

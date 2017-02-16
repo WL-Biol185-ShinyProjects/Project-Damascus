@@ -12,13 +12,15 @@ fluidPage(
       sliderInput("bins",
                   "Number of bins:",
                   min = 1,
-                  max = 50,
+                  max = 100,
                   value = 30)
     ),
-    actionButton("button", "an action button"),
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot")
+      plotOutput("distPlot"),
+      
+      tags$head(tags$script(src = "message-handler.js")),
+      actionButton("do", "Click Me")
     )
   )
 )
