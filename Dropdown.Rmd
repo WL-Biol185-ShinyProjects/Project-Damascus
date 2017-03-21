@@ -1,0 +1,31 @@
+---
+title: "Drop Down Bar"
+author: "Thomas Caldwell"
+date: "3/21/2017"
+output: html_document
+runtime: shiny
+---
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(shiny)
+```
+
+```{r}
+fluidPage(
+    
+  # Copy the line below to make a select box 
+  selectInput("condition", label = h3("Condition"), 
+    choices = unique(condition_names$condition), 
+    selected = 1),
+  
+  hr(),
+  fluidRow(column(3, verbatimTextOutput("value")))
+  
+)
+```
+
+
+

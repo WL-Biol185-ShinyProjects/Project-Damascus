@@ -1,0 +1,59 @@
+---
+title: "Leaflet Fun"
+author: "Thomas Caldwell"
+date: "3/16/2017"
+output: html_document
+runtime: shiny
+---
+
+```{r}
+library(leaflet)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+```{r}
+hospitals <- data.frame(lat = Map_Trial$lat[1:800],
+                        lon = Map_Trial$lon[1:800],
+                        place = Map_Trial$name[1:800],
+                        stringsAsFactors = FALSE)
+```
+
+```{r}
+leaflet(data = hospitals) %>% 
+        setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
+        addTiles() %>%
+        addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
+```
+
+
+```{r}
+Clean_Hospital_Data$condition <- Clean_Hospital_Data$`DRG Definition`
+```
+
+
+```{r}
+fluidPage(
+    
+  # Copy the line below to make a select box 
+  selectInput("condition", label = h3("Condition"), 
+    choices = unique(Clean_Hospital_Data$condition), 
+    selected = 1),
+  
+   # Copy the line below to make a select box 
+  selectInput("state", label = h3("State"), 
+    choices = unique(Clean_Hospital_Data$state), 
+    selected = 1),
+  
+  hr(),
+  fluidRow(column(3, verbatimTextOutput("value")))
+  
+  
+)
+
+Clean_Hospital_Data %>%
+  filter(condition == )
+```
+
+
