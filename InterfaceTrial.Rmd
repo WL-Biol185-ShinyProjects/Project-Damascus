@@ -15,6 +15,11 @@ library(shiny)
 ```
 
 ```{r}
+##money_right$condition <- money_right$`Provider Name`
+##money_right$state <- money_right$`Provider State`
+```
+
+```{r}
 fluidPage(
     
   # Copy the line below to make a select box 
