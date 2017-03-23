@@ -1,7 +1,7 @@
 ---
-title: "Leaflet Fun"
+title: "Interface"
 author: "Thomas Caldwell"
-date: "3/16/2017"
+date: "3/23/2017"
 output: html_document
 runtime: shiny
 ---
@@ -12,20 +12,6 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(shiny)
-```
-
-```{r}
-hospitals <- data.frame(lat = Map_Trial$lat[1:800],
-                        lon = Map_Trial$lon[1:800],
-                        place = Map_Trial$name[1:800],
-                        stringsAsFactors = FALSE)
-```
-
-```{r}
-leaflet(data = hospitals) %>% 
-        setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
-        addTiles() %>%
-        addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
 ```
 
 ```{r}
@@ -47,8 +33,6 @@ fluidPage(
   
   hr(),
   fluidRow(column(3, verbatimTextOutput("value")))
-  
-  
 )
 ```
 
@@ -58,9 +42,11 @@ renderPlot({
     filter(condition %in% input$condition, state %in% input$state) %>%
     group_by(`Provider Name`)
     summarise(n = n(),
-              ave_payment = mean(`Average Covered Charges`+`Average Total Payments`+`Average Medicare Payments`, na.rm =                TRUE)) %>%
-    ggplot(aes(ave_payment, color)) + geom_bar()
+              ave_payment = mean(`Average Covered Charges`+`Average Total Payments`+`Average Medicare Payments`, na.rm = TRUE)) %>%
+    ggplot(aes(ave_payment)) + geom_bar()
 })
 ```
+
+
 
 

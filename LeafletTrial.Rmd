@@ -1,7 +1,7 @@
 ---
-title: "Leaflet Fun"
+title: "Untitled"
 author: "Thomas Caldwell"
-date: "3/16/2017"
+date: "3/22/2017"
 output: html_document
 runtime: shiny
 ---
@@ -15,9 +15,9 @@ library(shiny)
 ```
 
 ```{r}
-hospitals <- data.frame(lat = Map_Trial$lat[1:800],
-                        lon = Map_Trial$lon[1:800],
-                        place = Map_Trial$name[1:800],
+hospitals <- data.frame(lat = Mapping$lat[1:3337],
+                        lon = Mapping$lon[1:3337],
+                        place = Mapping$name[1:3337],
                         stringsAsFactors = FALSE)
 ```
 
@@ -47,8 +47,6 @@ fluidPage(
   
   hr(),
   fluidRow(column(3, verbatimTextOutput("value")))
-  
-  
 )
 ```
 
@@ -59,7 +57,7 @@ renderPlot({
     group_by(`Provider Name`)
     summarise(n = n(),
               ave_payment = mean(`Average Covered Charges`+`Average Total Payments`+`Average Medicare Payments`, na.rm =                TRUE)) %>%
-    ggplot(aes(ave_payment, color)) + geom_bar()
+    ggplot(aes(ave_payment)) + geom_bar()
 })
 ```
 
