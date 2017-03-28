@@ -60,11 +60,13 @@ leaflet(data = hospitals) %>%
 
 
 ```{r}
+sorted_money <- order(money_right$`Average Total Payments`)
+
 renderPlot({
-  money_right %>%
+ sorted_money %>%
     filter(`DRG Definition` %in% input$condition) %>%
     filter(`Provider State` %in% input$state) %>%
-    ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + scale_x_discrete(limit = c(money_right$`Provider Name`[1:5]))
+    ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) + scale_x_discrete(limit = money_right$`Provider Name`[1:5])
 })
 ```
 
