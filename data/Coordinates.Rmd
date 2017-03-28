@@ -1,0 +1,42 @@
+---
+title: "Table Visualization"
+author: "Thomas Caldwell"
+date: "2/28/2017"
+output: html_document
+runtime: shiny
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+summary(Clean_Hospital_Data)
+```
+
+```{r}
+Clean_Hospital_Data %>%
+  group_by(`DRG Definition`)
+    count(`DRG Definition`)
+```
+
+```{r}
+library(dplyr)
+library(ggmap)
+
+    
+  c <- 801:1000    
+  lon5ab <- geocode(Street_Addresses$`Street Address`[c])
+  ##Street_Addresses$Longitude <- lon[1]
+  ##Street_Addresses$Latitude <- lon[2]
+```
+
+```{r}
+
+  n <- sapply(Clean_Hospital_Data$streetadress[1:10], function(x) {
+    geocode(x+1)
+    })
+
+```
+

@@ -1,0 +1,74 @@
+---
+title: "Untitled"
+author: "Thomas Caldwell"
+date: "3/22/2017"
+output: html_document
+runtime: shiny
+---
+
+```{r}
+library(leaflet)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(shiny)
+Mapping <- read.csv("Mapping.csv")
+```
+
+```{r warning=FALSE}
+library(readxl)
+Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
+library(readr)
+money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
+```
+
+```{r}
+fluidPage(
+    
+  # Copy the line below to make a select box 
+  selectInput("condition", label = h3("Condition"), 
+    choices = unique(money_right$`DRG Definition`), 
+    selected = 1),
+  
+   # Copy the line below to make a select box 
+  selectInput("state", label = h3("State"), 
+    choices = unique(money_right$`Provider State`), 
+    selected = 1),
+  
+   checkboxGroupInput("checkGroup", label = h3("Checkbox group"),
+    choices = list("Average Covered Charges" = 1, "Average Total Payments" = 2, "Average Medicare Payments" = 3),
+    selected = 1),
+  
+  hr(),
+  fluidRow(column(3, verbatimTextOutput("value")))
+)
+
+```
+
+```{r}
+hospitals <- data.frame(lat = Mapping$lat[1:3337],
+                        lon = Mapping$lon[1:3337],
+                        place = Mapping$name[1:3337],
+                        stringsAsFactors = FALSE)
+```
+
+```{r}
+leaflet(data = hospitals) %>% 
+        setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
+        addTiles() %>%
+        addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
+```
+
+
+```{r}
+sorted_money <- order(money_right$`Average Total Payments`)
+
+renderPlot({
+ sorted_money %>%
+    filter(`DRG Definition` %in% input$condition) %>%
+    filter(`Provider State` %in% input$state) %>%
+    ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) + scale_x_discrete(limit = money_right$`Provider Name`[1:5])
+})
+```
+
+
