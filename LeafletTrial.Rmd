@@ -12,6 +12,7 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(shiny)
+Mapping <- read.csv("Mapping.csv")
 ```
 
 ```{r}
