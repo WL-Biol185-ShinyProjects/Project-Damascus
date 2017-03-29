@@ -54,10 +54,10 @@ fluidRow(
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
   output$bar <- renderPlot({
-    combined %>%
+    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name, Average.Total.Payments, fill = name)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
+      ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
   })
   output$map <- renderLeaflet({
     hospitals %>%
@@ -66,7 +66,7 @@ server <- function(input,output) {
       leaflet() %>% 
       setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
       addTiles() %>%
-      addCircleMarkers(popup = ~place"\n"payment, clusterOptions = markerClusterOptions())
+      addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
   })
 }
   shinyApp(ui=ui, server=server)
