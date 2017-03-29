@@ -4,14 +4,19 @@ library(ggplot2)
 library(tidyr)
 library(shiny)
 library(readxl)
-Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
+##Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
 library(readr)
-money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
+##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
-
-hospitals <- data.frame(lat = Mapping$lat[1:3337],
-                        lon = Mapping$lon[1:3337],
-                        place = Mapping$name[1:3337],
+##combined <- read.csv("~/Project-Damascus/data/combined.csv")
+hospitals <- data.frame(lat = combined$lat,
+                        lon = combined$lon,
+                        place = combined$name,
+                        condition = combined$DRG.Definition,
+                        state = combined$Provider.State,
+                        payment = combined$Average.Total.Payments,
+                        coverage = combined$Average.Covered.Charges,
+                        medicare_pay = combined$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
 ui <- fluidPage(
@@ -20,10 +25,13 @@ ui <- fluidPage(
       tags$strong(style="font-family: Impact", "Hospital Locator")
     )),
     column(8,
-           leaflet(data = hospitals) %>% 
-             setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
-             addTiles() %>%
-             addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())),
+           ##money_right %>%
+             ##filter(`DRG Definition` %in% input$condition) %>%
+             ##filter(`Provider State` %in% input$state) %>%
+              leaflet(data = hospitals) %>% 
+                 setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
+                 addTiles() %>%
+                 addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())),
            
     column(4,
       inputPanel(
