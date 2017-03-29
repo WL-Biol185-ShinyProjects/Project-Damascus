@@ -8,15 +8,15 @@ library(readxl)
 library(readr)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
-##combined <- read.csv("~/Project-Damascus/data/combined.csv")
-hospitals <- data.frame(lat = combined$lat,
-                        lon = combined$lon,
-                        place = combined$name,
-                        condition = combined$DRG.Definition,
-                        state = combined$Provider.State,
-                        payment = combined$Average.Total.Payments,
-                        coverage = combined$Average.Covered.Charges,
-                        medicare_pay = combined$Average.Medicare.Payments,
+##combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
+hospitals <- data.frame(lat = combined1$lat,
+                        lon = combined1$lon,
+                        place = combined1$name.x,
+                        condition = combined1$DRG.Definition,
+                        state = combined1$Provider.State,
+                        payment = combined1$Average.Total.Payments,
+                        coverage = combined1$Average.Covered.Charges,
+                        medicare_pay = combined1$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
 ui <- fluidPage(
@@ -66,7 +66,7 @@ server <- function(input,output) {
       leaflet() %>% 
       setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
       addTiles() %>%
-      addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
+      addCircleMarkers(popup = ~place"\n"payment, clusterOptions = markerClusterOptions())
   })
 }
   shinyApp(ui=ui, server=server)
