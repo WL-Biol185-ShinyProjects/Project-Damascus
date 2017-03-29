@@ -12,11 +12,13 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(shiny)
+
 ```
 
 ```{r}
-##money_right$condition <- money_right$`Provider Name`
-##money_right$state <- money_right$`Provider State`
+money_right <- read.csv("data/money_right.csv")
+money_right$condition <- money_right$`DRG Definition`
+money_right$state <- money_right$`Provider State`
 ```
 
 ```{r}
@@ -51,6 +53,7 @@ renderPlot({
     ggplot(aes(ave_payment)) + geom_bar()
 })
 ```
+
 
 
 
