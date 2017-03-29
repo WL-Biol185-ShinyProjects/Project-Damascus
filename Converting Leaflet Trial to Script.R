@@ -47,6 +47,17 @@ ui <- fluidPage(
 ) 
 ),
 fluidRow(
+  tags$p("    "),
+  tags$hr("    ")
+),
+fluidRow(
+  column(11, offset =1,
+  tags$p("Below is a graph showing each hospitals' Average Total Payment for the condition and state you selected above. ")
+  )
+),
+fluidRow(
+  tags$hr("    "),
+  tags$p("    "),
   plotOutput(outputId = "bar"))
 )
 #this is just creating space for the graph when we make it.
