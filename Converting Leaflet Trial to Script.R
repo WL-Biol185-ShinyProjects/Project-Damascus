@@ -49,7 +49,7 @@ ui <- fluidPage(
 fluidRow(
   plotOutput(outputId = "bar"))
 )
-
+#this is just creating space for the graph when we make it.
 server <- function(input,output) {
 }
   shinyApp(ui=ui, server=server)
