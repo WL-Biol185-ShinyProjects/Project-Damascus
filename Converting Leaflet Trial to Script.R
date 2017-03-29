@@ -1,0 +1,55 @@
+library(leaflet)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(shiny)
+library(readxl)
+Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
+library(readr)
+money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
+#calling all packages and datasets necessary for app
+
+hospitals <- data.frame(lat = Mapping$lat[1:3337],
+                        lon = Mapping$lon[1:3337],
+                        place = Mapping$name[1:3337],
+                        stringsAsFactors = FALSE)
+
+ui <- fluidPage(
+  fluidRow(
+    column(11, offset=1, tags$h1(
+      tags$strong(style="font-family: Impact", "Hospital Locator")
+    )),
+    column(8,
+           leaflet(data = hospitals) %>% 
+             setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
+             addTiles() %>%
+             addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())),
+           
+    column(4,
+      inputPanel(
+        tags$h4("Please select your", tags$em(tags$strong("Condition")), "and", tags$em(tags$strong("State")), "using the dropdown menus below"),
+  # Copy the line below to make a select box 
+  selectInput("condition", label = h3("Condition"), 
+              choices = unique(money_right$`DRG Definition`), 
+              selected = 1),
+  
+  # Copy the line below to make a select box 
+  selectInput("state", label = h3("State"), 
+              choices = unique(money_right$`Provider State`), 
+              selected = 1),
+  
+  checkboxGroupInput("checkGroup", label = h3("Checkbox group"),
+                     choices = list("Average Covered Charges" = 1, "Average Total Payments" = 2, "Average Medicare Payments" = 3),
+                     selected = 1),
+  
+  hr()
+)
+) 
+),
+fluidRow(
+  plotOutput(outputId = "bar"))
+)
+
+server <- function(input,output) {
+}
+  shinyApp(ui=ui, server=server)
