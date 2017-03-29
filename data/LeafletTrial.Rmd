@@ -34,10 +34,6 @@ fluidPage(
     choices = unique(money_right$`Provider State`), 
     selected = 1),
   
-   checkboxGroupInput("checkGroup", label = h3("Checkbox group"),
-    choices = list("Average Covered Charges" = 1, "Average Total Payments" = 2, "Average Medicare Payments" = 3),
-    selected = 1),
-  
   hr(),
   fluidRow(column(3, verbatimTextOutput("value")))
 )
@@ -45,9 +41,9 @@ fluidPage(
 ```
 
 ```{r}
-hospitals <- data.frame(lat = Mapping$lat[1:3337],
-                        lon = Mapping$lon[1:3337],
-                        place = Mapping$name[1:3337],
+hospitals <- data.frame(lat = unique(combined$lat),
+                        lon = unique(combined$lon),
+                        place = unique(combined$name),
                         stringsAsFactors = FALSE)
 ```
 
@@ -60,13 +56,11 @@ leaflet(data = hospitals) %>%
 
 
 ```{r}
-sorted_money <- order(money_right$`Average Total Payments`)
-
 renderPlot({
- sorted_money %>%
+ money_right %>%
     filter(`DRG Definition` %in% input$condition) %>%
     filter(`Provider State` %in% input$state) %>%
-    ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) + scale_x_discrete(limit = money_right$`Provider Name`[1:5])
+    ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) ##scale_x_discrete(limit = money_right$`Provider Name`[1:5])
 })
 ```
 
