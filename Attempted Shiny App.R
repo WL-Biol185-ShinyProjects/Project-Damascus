@@ -1,5 +1,6 @@
 library(shiny)
-
+library(ggplot2)
+library(dplyr)
 ui <- fluidPage(
   
   # Copy the line below to make a select box 
@@ -20,16 +21,16 @@ ui <- fluidPage(
   fluidRow(column(3, verbatimTextOutput("value"))),
   
   plotOutput(outputId = "bar")
-  
 )
 
 server <- function(input,output) {
   output$bar <- renderPlot({
-    filter
-    ggplot(aes(`Provider Name`, input$)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) + scale_x_discrete(limit = money_right$`Provider Name`[1:5])
-})
-    }
-
+    money_right %>%
+      filter(`DRG Definition` %in% input$condition) %>%
+      filter(`Provider State` %in% input$state) %>%
+      ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
+    })
+}
 shinyApp(ui = ui, server = server)
 
 

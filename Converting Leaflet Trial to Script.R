@@ -51,5 +51,11 @@ fluidRow(
 )
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
+  output$bar <- renderPlot({
+    money_right %>%
+      filter(`DRG Definition` %in% input$condition) %>%
+      filter(`Provider State` %in% input$state) %>%
+      ggplot(aes(`Provider Name`, `Average Total Payments`, fill = `Provider Name`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
+  })
 }
   shinyApp(ui=ui, server=server)
