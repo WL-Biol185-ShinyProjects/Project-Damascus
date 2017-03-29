@@ -14,9 +14,9 @@ hospitals <- data.frame(lat = combined$lat,
                         place = combined$name,
                         condition = combined$DRG.Definition,
                         state = combined$Provider.State,
-                        ##payment = combined$Average.Total.Payments,
-                        ##coverage = combined$Average.Covered.Charges,
-                        ##medicare_pay = combined$Average.Medicare.Payments,
+                        payment = combined$Average.Total.Payments,
+                        coverage = combined$Average.Covered.Charges,
+                        medicare_pay = combined$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
 ui <- fluidPage(
