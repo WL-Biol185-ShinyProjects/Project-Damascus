@@ -8,15 +8,18 @@ library(readxl)
 library(readr)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
-##combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
-hospitals <- data.frame(lat = combined1$lat,
-                        lon = combined1$lon,
-                        place = combined1$name.x,
-                        condition = combined1$DRG.Definition,
-                        state = combined1$Provider.State,
-                        payment = combined1$Average.Total.Payments,
-                        coverage = combined1$Average.Covered.Charges,
-                        medicare_pay = combined1$Average.Medicare.Payments,
+combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
+combined_sorted <- arrange(combined1, Average.Total.Payments)
+combined_ordered <- mutate(combined_sorted,
+                           Average.Total.Payments = factor(Average.Total.Payments, levels = Average.Total.Payments, ordered = TRUE))
+hospitals <- data.frame(lat = combined_ordered$lat,
+                        lon = combined_ordered$lon,
+                        place = combined_ordered$name.x,
+                        condition = combined_ordered$DRG.Definition,
+                        state = combined_ordered$Provider.State,
+                        payment = combined_ordered$Average.Total.Payments,
+                        coverage = combined_ordered$Average.Covered.Charges,
+                        medicare_pay = combined_ordered$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
 ui <- fluidPage(
@@ -54,10 +57,10 @@ fluidRow(
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
   output$bar <- renderPlot({
-    combined1 %>%
+    combined_ordered %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
+      ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) scale_x_discrete("name.x", limit = c(name.x1:10))
   })
   output$map <- renderLeaflet({
     hospitals %>%
