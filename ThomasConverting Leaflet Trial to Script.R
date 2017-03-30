@@ -9,17 +9,17 @@ library(readr)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
 combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
-combined_sorted <- arrange(combined1, Average.Total.Payments)
-combined_ordered <- mutate(combined_sorted,
-                           Average.Total.Payments = factor(Average.Total.Payments, levels = Average.Total.Payments, ordered = TRUE))
-hospitals <- data.frame(lat = combined_ordered$lat,
-                        lon = combined_ordered$lon,
-                        place = combined_ordered$name.x,
-                        condition = combined_ordered$DRG.Definition,
-                        state = combined_ordered$Provider.State,
-                        payment = combined_ordered$Average.Total.Payments,
-                        coverage = combined_ordered$Average.Covered.Charges,
-                        medicare_pay = combined_ordered$Average.Medicare.Payments,
+##combined_sorted <- arrange(combined1, Average.Total.Payments)
+##combined_ordered <- mutate(combined_sorted,
+                           ##Average.Total.Payments = factor(Average.Total.Payments, levels = Average.Total.Payments, ordered = TRUE))
+hospitals <- data.frame(lat = combined1$lat,
+                        lon = combined1$lon,
+                        place = combined1$name.x,
+                        condition = combined1$DRG.Definition,
+                        state = combined1$Provider.State,
+                        payment = combined1$Average.Total.Payments,
+                        coverage = combined1$Average.Covered.Charges,
+                        medicare_pay = combined1$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
 ui <- fluidPage(
@@ -57,7 +57,7 @@ fixedRow(
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
   output$bar <- renderPlot({
-    combined_sorted %>%
+    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
       ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + 
@@ -69,9 +69,13 @@ server <- function(input,output) {
       filter(condition %in% input$condition) %>%
       filter(state %in% input$state) %>%
       leaflet() %>% 
-      setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
-      addTiles() %>%
-      addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
+        setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
+        addTiles() %>%
+        addCircleMarkers(popup = paste("Name: ", place, "<br>",
+                                     "Average Payment: ", payment, "<br>",
+                                     "Average Coverage: ", coverage, "<br>",
+                                     "Medicare Coverage: ", medicare_pay), 
+                       clusterOptions = markerClusterOptions())
   })
 }
   shinyApp(ui=ui, server=server)

@@ -77,7 +77,7 @@ server <- function(input,output) {
       leaflet() %>% 
       setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
       addTiles() %>%
-      addCircleMarkers(popup = ~place, clusterOptions = markerClusterOptions())
+      addCircleMarkers(popup = c(place, payment), clusterOptions = markerClusterOptions())
   })
 }
 shinyApp(ui=ui, server=server)
