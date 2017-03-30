@@ -51,7 +51,7 @@ ui <- fluidPage(
 )
 ) 
 ),
-fluidRow(
+fixedRow(
   plotOutput(outputId = "bar"))
 )
 #this is just creating space for the graph when we make it.
@@ -60,7 +60,7 @@ server <- function(input,output) {
     combined_ordered %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) scale_x_discrete("name.x", limit = c(name.x1:10))
+      ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + geom_bar(stat = "identity") + theme(axis.text.x = element_blank()) 
   })
   output$map <- renderLeaflet({
     hospitals %>%
