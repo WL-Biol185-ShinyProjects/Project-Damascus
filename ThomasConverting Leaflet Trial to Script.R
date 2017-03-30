@@ -22,6 +22,12 @@ hospitals <- data.frame(lat = combined1$lat,
                         medicare_pay = combined1$Average.Medicare.Payments,
                         stringsAsFactors = FALSE)
 
+hospitals$labels = paste("Name: ", hospitals$place, "<br>",
+                         "Average Payment: ", hospitals$payment, "<br>",
+                         "Average Coverage: ", hospitals$coverage, "<br>",
+                         "Medicare Coverage: ", hospitals$medicare_pay)
+
+
 ui <- fluidPage(
   fluidRow(
     column(11, offset=1, tags$h1(
@@ -71,10 +77,7 @@ server <- function(input,output) {
       leaflet() %>% 
         setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
         addTiles() %>%
-        addCircleMarkers(popup = paste("Name: ", place, "<br>",
-                                     "Average Payment: ", payment, "<br>",
-                                     "Average Coverage: ", coverage, "<br>",
-                                     "Medicare Coverage: ", medicare_pay), 
+        addCircleMarkers(popup = ~labels, 
                        clusterOptions = markerClusterOptions())
   })
 }
