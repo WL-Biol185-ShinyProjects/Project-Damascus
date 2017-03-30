@@ -56,7 +56,12 @@ ui <- fluidPage(
     ),
   tabPanel("Graph",
     fixedRow(
-    plotOutput(outputId = "bar"))
+    plotOutput(outputId = "bar", height = "800px")),
+    fixedRow(
+      plotOutput(outputId = "bar2", height = "800px")),
+    fixedRow(
+      plotOutput(outputId = "bar3", height = "800px"))
+    )
   )
 )
 )
@@ -69,6 +74,24 @@ server <- function(input,output) {
       ggplot(aes(name.x, Average.Total.Payments, fill = name.x)) + 
       geom_bar(stat = "identity") + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+    
+  })
+  output$bar2 <- renderPlot({
+    combined_sorted %>%
+      filter(DRG.Definition %in% input$condition) %>%
+      filter(Provider.State %in% input$state) %>%
+      ggplot(aes(name.x, Average.Covered.Charges, fill = name.x)) + 
+      geom_bar(stat = "identity") + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+  })
+  output$bar3 <- renderPlot({
+    combined_sorted %>%
+      filter(DRG.Definition %in% input$condition) %>%
+      filter(Provider.State %in% input$state) %>%
+      ggplot(aes(name.x, Average.Medicare.Coverage, fill = name.x)) + 
+      geom_bar(stat = "identity") + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+    
   })
   output$map <- renderLeaflet({
     hospitals %>%
