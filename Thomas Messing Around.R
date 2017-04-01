@@ -34,7 +34,7 @@ ui <- fluidPage(
       tags$strong(style="font-family: Impact", "Hospital Locator")
     )),
     column(8,
-           leafletOutput(outputId = "map")),
+           leafletOutput(outputId = "map", height = "800px")),
     
     column(4,
            inputPanel(
@@ -47,14 +47,9 @@ ui <- fluidPage(
              # Copy the line below to make a select box 
              selectInput("state", label = h3("State"), 
                          choices = unique(hospitals$state), 
-                         selected = 1),
-             
-             checkboxGroupInput("checkGroup", label = h3("Checkbox group"),
-                                choices = list("Average Covered Charges" = 1, "Average Total Payments" = 2, "Average Medicare Payments" = 3),
-                                selected = 1),
-             
-             hr()
+                         selected = 1)
            )
+
     ) 
   )
     ),
