@@ -1,0 +1,27 @@
+---
+title: "Table Fun"
+author: "Thomas Caldwell"
+date: "3/28/2017"
+output: html_document
+---
+
+```{r warning=FALSE}
+library(leaflet)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+library(readxl)
+Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
+library(readr)
+money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
+```
+
+
+```{r}
+money_right$name <- money_right$`Provider Name`
+money_right$street_address <- money_right$`Street Address`
+combined <- left_join(Mapping, money_right, by = "street_address")
+View(combined)
+```
+
