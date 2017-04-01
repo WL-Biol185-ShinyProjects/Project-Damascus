@@ -26,18 +26,18 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
                          "Average Coverage: $", hospitals$coverage, "<br>",
                          "Medicare Coverage: $", hospitals$medicare_pay)
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("superhero"),
   tabsetPanel(
     tabPanel("Map",
   fluidRow(
     column(11, offset=1, tags$h1(
-      tags$strong(style="font-family: Impact", "Hospital Locator")
+      tags$strong("Hospital Locator")
     )),
     column(8,
            leafletOutput(outputId = "map", height = "800px")),
     
     column(4,
-           inputPanel(
+           wellPanel(
              tags$h4("Please select your", tags$em(tags$strong("Condition")), "and", tags$em(tags$strong("State")), "using the dropdown menus below"),
              # Copy the line below to make a select box 
              selectInput("condition", label = h3("Condition"), 
@@ -80,25 +80,26 @@ server <- function(input,output) {
    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Total.Payments, fill = Provider.Zip.Code)) + 
-      geom_bar(stat = "identity") + 
-      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none") + scale_color_brewer(palette = "Greens")
+      ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+     
     
   })
   output$bar2 <- renderPlot({
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Covered.Charges, fill = name.x)) + 
-      geom_bar(stat = "identity") + 
+      ggplot(aes(name.x, Average.Covered.Charges, fill = Average.Covered.Charges)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
   })
   output$bar3 <- renderPlot({
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Medicare.Payments, fill = name.x)) + 
-      geom_bar(stat = "identity") + 
+      ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
     
   })
