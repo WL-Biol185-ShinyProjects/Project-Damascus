@@ -28,17 +28,18 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
                          "Medicare Coverage: $", hospitals$medicare_pay)
 
 ui <- fluidPage(
+  theme = shinytheme("superhero"),
   tabsetPanel(
     tabPanel("Map",
   fluidRow(
     column(11, offset=1, tags$h1(
-      tags$strong(style="font-family: Impact", "Hospital Locator")
+      tags$strong("Hospital Locator")
     )),
     column(8,
-           leafletOutput(outputId = "map")),
+           leafletOutput(outputId = "map", height = "800px")),
     
     column(4,
-           inputPanel(
+           wellPanel(
              tags$h4("Please select your", tags$em(tags$strong("Condition")), "and", tags$em(tags$strong("State")), "using the dropdown menus below"),
              # Copy the line below to make a select box 
              selectInput("condition", label = h3("Condition"), 
@@ -48,14 +49,9 @@ ui <- fluidPage(
              # Copy the line below to make a select box 
              selectInput("state", label = h3("State"), 
                          choices = unique(hospitals$state), 
-                         selected = 1),
-             
-             checkboxGroupInput("checkGroup", label = h3("Checkbox group"),
-                                choices = list("Average Covered Charges" = 1, "Average Total Payments" = 2, "Average Medicare Payments" = 3),
-                                selected = 1),
-             
-             hr()
+                         selected = 1)
            )
+
     ) 
   )
     ),
@@ -87,7 +83,7 @@ server <- function(input,output) {
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
       ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
-      geom_bar(stat = "identity") + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
     
   })
@@ -95,16 +91,16 @@ server <- function(input,output) {
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Covered.Charges, fill = name.x)) + 
-      geom_bar(stat = "identity") + 
+      ggplot(aes(name.x, Average.Covered.Charges, fill = Average.Covered.Charges)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
   })
   output$bar3 <- renderPlot({
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Medicare.Payments, fill = name.x)) + 
-      geom_bar(stat = "identity") + 
+      ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
     
   })
@@ -113,8 +109,8 @@ server <- function(input,output) {
       filter(condition %in% input$condition) %>%
       filter(state %in% input$state) %>%
       leaflet() %>% 
-      setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
-      addTiles() %>%
+      setView(lng = -99.9018, lat = 41.4925, zoom = 3) %>%
+      addTiles(options = tileOptions(noWrap = TRUE)) %>%
       addCircleMarkers(popup = ~labels, clusterOptions = markerClusterOptions())
   })
 }
