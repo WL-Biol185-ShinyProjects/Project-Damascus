@@ -7,6 +7,7 @@ library(readxl)
 library(shinythemes)
 ##Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
 library(readr)
+library(RColorBrewer)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
 combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
@@ -85,9 +86,9 @@ server <- function(input,output) {
    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ggplot(aes(name.x, Average.Total.Payments, fill = Provider.Zip.Code)) + 
+      ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
       geom_bar(stat = "identity") + 
-      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none") + scale_color_brewer(palette = "Greens")
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
     
   })
   output$bar2 <- renderPlot({
