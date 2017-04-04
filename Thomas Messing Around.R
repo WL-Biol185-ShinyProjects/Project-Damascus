@@ -26,7 +26,8 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
                          "Average Coverage: $", hospitals$coverage, "<br>",
                          "Medicare Coverage: $", hospitals$medicare_pay)
 
-ui <- fluidPage(theme = shinytheme("superhero"),
+ui <- fluidPage(
+  theme = shinytheme("superhero"),
   tabsetPanel(
     tabPanel("Map",
   fluidRow(
@@ -108,8 +109,8 @@ server <- function(input,output) {
       filter(condition %in% input$condition) %>%
       filter(state %in% input$state) %>%
       leaflet() %>% 
-      setView(lng = -79.442778, lat = 37.783889, zoom = 1) %>%
-      addTiles() %>%
+      setView(lng = -99.9018, lat = 41.4925, zoom = 3) %>%
+      addTiles(options = tileOptions(noWrap = TRUE)) %>%
       addCircleMarkers(popup = ~labels, clusterOptions = markerClusterOptions())
   })
 }
