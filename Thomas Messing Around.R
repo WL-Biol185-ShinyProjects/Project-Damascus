@@ -42,14 +42,14 @@ ui <- fluidPage(
            wellPanel(
              tags$h4("Please select your", tags$em(tags$strong("Condition")), "and", tags$em(tags$strong("State")), "using the dropdown menus below"),
              # Copy the line below to make a select box 
-             selectInput("condition", label = h3("Condition"), 
-                         choices = unique(hospitals$condition), 
-                         selected = 1),
+             selectizeInput("condition", label = h3("Condition"), 
+                         choices = unique(hospitals$condition),
+                         selected = NULL, multiple = TRUE),
              
              # Copy the line below to make a select box 
-             selectInput("state", label = h3("State"), 
+             selectizeInput("state", label = h3("State"), 
                          choices = unique(hospitals$state), 
-                         selected = 1)
+                         selected = NULL, multiple = TRUE)
            )
 
     ) 
