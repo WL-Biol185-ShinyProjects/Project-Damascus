@@ -7,7 +7,6 @@ library(readxl)
 library(shinythemes)
 ##Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
 library(readr)
-library(RColorBrewer)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
 combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
@@ -43,14 +42,14 @@ ui <- fluidPage(
            wellPanel(
              tags$h4("Please select your", tags$em(tags$strong("Condition")), "and", tags$em(tags$strong("State")), "using the dropdown menus below"),
              # Copy the line below to make a select box 
-             selectizeInput("condition", label = h3("Condition"), 
-                         choices = unique(hospitals$condition),
-                         selected = NULL, multiple = TRUE),
+             selectInput("condition", label = h3("Condition"), 
+                         choices = unique(hospitals$condition), 
+                         selected = 1),
              
              # Copy the line below to make a select box 
-             selectizeInput("state", label = h3("State"), 
+             selectInput("state", label = h3("State"), 
                          choices = unique(hospitals$state), 
-                         selected = NULL, multiple = TRUE)
+                         selected = 1)
            )
 
     ) 
@@ -86,6 +85,7 @@ server <- function(input,output) {
       ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+     
     
   })
   output$bar2 <- renderPlot({
