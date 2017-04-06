@@ -62,6 +62,29 @@ ui <- fluidPage(
                           ) 
                         )
                ),
+               tabPanel("Graphs",
+                        tabsetPanel(
+               tabPanel("Payment",
+                        fixedRow(
+                          column(11, offset = 1, plotOutput(outputId = "bar", height = "800px"),
+                                 tags$p("     "),
+                                 tags$p("     "),
+                                 tags$hr("    "),
+                                 tags$p("     "),
+                                 tags$p("     ")))),
+               tabPanel("Coverage",
+                        fixedRow(
+                          column(11, offset = 1, plotOutput(outputId = "bar2", height = "800px"),
+                                 tags$p("     "),
+                                 tags$p("     "),
+                                 tags$hr("    "),
+                                 tags$p("     "),
+                                 tags$p("     ")))),
+               tabPanel("Medicare",
+                        fixedRow(
+                          column(11, offset =1, plotOutput(outputId = "bar3", height = "800px"))
+                        )))),
+  
                tabPanel("Comparison",
                         fixedRow(
                           column(11, offset = 1,
