@@ -32,9 +32,9 @@ ui <- fluidPage(
   tabsetPanel(
     tabPanel("Title Page"),
     tabPanel("Map",
-  fluidRow(
-    column(11, offset=1, tags$h1(
-      tags$strong("Hospital Locator")
+      fluidRow(
+        column(11, offset=1, tags$h1(
+          tags$strong("Hospital Locator")
     )),
     column(8,
            leafletOutput(outputId = "map", height = "800px")),
@@ -46,41 +46,40 @@ ui <- fluidPage(
              selectInput("condition", label = h3("Condition"),
                             choices = unique(hospitals$condition),
                             selected = NULL),
-             uiOutput("state"),
-             uiOutput("hospital")
+             uiOutput("state")
            )
 
     ) 
   )
     ),
   tabPanel("Comparison",
-    fixedRow(
-   column(11, offset = 1, plotOutput(outputId = "bar", height = "800px"),
-    tags$p("     "),
-    tags$p("     "),
-    tags$hr("    "),
-    tags$p("     "),
-    tags$p("     ")))),
-   tabPanel("Coverage",
-    fixedRow(
-     column(11, offset = 1, plotOutput(outputId = "bar2", height = "800px"),
-    tags$p("     "),
-    tags$p("     "),
-    tags$hr("    "),
-    tags$p("     "),
-    tags$p("     ")))),
-  tabPanel("Medicare",
-    fixedRow(
-      column(11, offset =1, plotOutput(outputId = "bar3", height = "800px")))
-    )
-  ))
+           fixedRow(
+             column(11, offset = 1,
+             uiOutput("hospital")),
+              tabsetPanel(
+              tabPanel("Payment",
+                       fixedRow(
+                         column(11, offset = 1, plotOutput(outputId = "bar", height = "800px")))
+                       ),
+              tabPanel("Coverage",
+                      fixedRow(
+                         column(11, offset = 1, plotOutput(outputId = "bar2", height = "800px")))
+                      ),
+              tabPanel("Medicare",
+                       fixedRow(
+                        column(11, offset =1, plotOutput(outputId = "bar3", height = "800px")))
+                      )
+              )
+            ))
+           )
+)
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
   output$bar <- renderPlot({
    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ##filter(name.x %in% input$hospital) %>%
+      filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
@@ -91,7 +90,7 @@ server <- function(input,output) {
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ##filter(name.x %in% input$hospital) %>%
+      filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Covered.Charges, fill = Average.Covered.Charges)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
@@ -100,7 +99,7 @@ server <- function(input,output) {
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state) %>%
-      ##filter(name.x %in% input$hospital) %>%
+      filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
@@ -110,7 +109,6 @@ server <- function(input,output) {
     hospitals %>%
       filter(condition %in% input$condition) %>%
       filter(state %in% input$state) %>%
-      filter(place %in% input$hospital) %>%
       leaflet() %>% 
       setView(lng = -99.9018, lat = 41.4925, zoom = 3) %>%
       addTiles(options = tileOptions(noWrap = TRUE)) %>%
