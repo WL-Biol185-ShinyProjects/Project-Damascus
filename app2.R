@@ -29,7 +29,7 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
 
 ui <- fluidPage(
   theme = shinytheme("spacelab"),
-  navlistPanel(widths = c(3,9),
+  tabsetPanel(
     tabPanel("Title Page",
              tags$h2("Welcome to the", tags$h1(tags$strong("Hospital Locator"), align = "center"), align = "center"),
              tags$p("   "),
@@ -64,20 +64,25 @@ ui <- fluidPage(
     ),
   tabPanel("Cost Comparison",
            fixedRow(
-             column(11, offset = 1,
-             uiOutput("hospital")),
+             column(3, selectizeInput("state1", label = h3("State"),
+                                                     choices = unique(hospitals$state), "State",
+                                                     selected = 1, multiple = TRUE)),
+             column(3, uiOutput("hospital")),
+             column(4, selectInput("condition", label = h3("Condition"),
+                                      choices = unique(hospitals$condition),
+                                      selected = NULL)),
               tabsetPanel(
-              tabPanel("Payment",
+                tabPanel("Payment",
                        fixedRow(
-                         column(11, offset = 1, plotOutput(outputId = "bar", height = "800px")))
+                         column(11, offset = 1, plotOutput(outputId = "bar", height = "600px")))
                        ),
-              tabPanel("Coverage",
+                tabPanel("Coverage",
                       fixedRow(
-                         column(11, offset = 1, plotOutput(outputId = "bar2", height = "800px")))
+                         column(11, offset = 1, plotOutput(outputId = "bar2", height = "600px")))
                       ),
-              tabPanel("Medicare",
+                tabPanel("Medicare",
                        fixedRow(
-                        column(11, offset =1, plotOutput(outputId = "bar3", height = "800px")))
+                        column(11, offset = 1, plotOutput(outputId = "bar3", height = "600px")))
                       )
               )
             ))
@@ -88,7 +93,7 @@ server <- function(input,output) {
   output$bar <- renderPlot({
    combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
-      filter(Provider.State %in% input$state) %>%
+      filter(Provider.State %in% input$state1) %>%
       filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
@@ -99,7 +104,7 @@ server <- function(input,output) {
   output$bar2 <- renderPlot({
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
-      filter(Provider.State %in% input$state) %>%
+      filter(Provider.State %in% input$state1) %>%
       filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Covered.Charges, fill = Average.Covered.Charges)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
@@ -108,7 +113,7 @@ server <- function(input,output) {
   output$bar3 <- renderPlot({
     combined1 %>%
       filter(DRG.Definition %in% input$condition) %>%
-      filter(Provider.State %in% input$state) %>%
+      filter(Provider.State %in% input$state1) %>%
       filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
@@ -136,7 +141,7 @@ server <- function(input,output) {
   })
   output$hospital <- renderUI({
    selectizeInput("hospital", label = h3("Hospital"),
-                 choices = unique(hospitals$place[which(hospitals$state == input$state)]), "State",
+                 choices = unique(hospitals$place[which(hospitals$state == input$state1)]), "State",
                  selected = NULL, multiple = TRUE)
   })
 }
