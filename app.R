@@ -9,7 +9,7 @@ library(shinythemes)
 library(readr)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
 #calling all packages and datasets necessary for app
-combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
+combined1 <- read.csv(file = "data/combined1.csv")
 
 hospitals <- data.frame(lat = combined1$lat,
                         lon = combined1$lon,
