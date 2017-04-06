@@ -45,14 +45,14 @@ ui <- fluidPage(
              # Copy the line below to make a select box 
              selectInput("condition", label = h3("Condition"),
                             choices = unique(hospitals$condition),
-                            selected = NULL),
+                            selected = 1),
              uiOutput("state")
            )
 
     ) 
   )
     ),
-  tabPanel("Comparison",
+  tabPanel("Cost Comparison",
            fixedRow(
              column(11, offset = 1,
              uiOutput("hospital")),
@@ -117,7 +117,7 @@ server <- function(input,output) {
   output$state <- renderUI({
     selectizeInput("state", label = h3("State"),
                    choices = unique(hospitals$state), "State",
-                   selected = NULL, multiple = TRUE)
+                   selected = 1, multiple = TRUE)
   })
   output$condition <- renderUI({
     selectInput("condition", label = h3("Condition"),
