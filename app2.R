@@ -39,7 +39,7 @@ ui <- fluidPage(
              tags$p(""),
              tags$p(tags$h4("Additionally, we have provided information of the average amount a patient pays for their condition at any given hospital, alongwith similar information about insurance coverage and medicare coverage.", align = "center")),
              tags$p(""),
-             tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "tab.", align = "center"))
+             tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center"))
     ),
     tabPanel("Map",
       fluidRow(
