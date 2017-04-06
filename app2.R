@@ -29,8 +29,18 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
 
 ui <- fluidPage(
   theme = shinytheme("spacelab"),
-  tabsetPanel(
-    tabPanel("Title Page"),
+  navlistPanel(widths = c(3,9),
+    tabPanel("Title Page",
+             tags$h2("Welcome to the", tags$h1(tags$strong("Hospital Locator"), align = "center"), align = "center"),
+             tags$p("   "),
+             HTML('<center><img src="Hospital.png" width = "400" height = "400"></center>'),
+             tags$p(tags$h2("Our Mission:", align = "center"),
+                    tags$h4("We created this app so that you can become an informed consumer when paying for your healthcare. By selecting your condition and your state, you can see all the hospitals in your area that treat that condition.", align = "center")),
+             tags$p(""),
+             tags$p(tags$h4("Additionally, we have provided information of the average amount a patient pays for their condition at any given hospital, alongwith similar information about insurance coverage and medicare coverage.", align = "center")),
+             tags$p(""),
+             tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "tab.", align = "center"))
+    ),
     tabPanel("Map",
       fluidRow(
         column(11, offset=1, tags$h1(
