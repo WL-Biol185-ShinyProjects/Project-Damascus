@@ -112,6 +112,7 @@ ui <- dashboardPage(
               wellPanel(
                 tags$h4("Please select your", tags$strong(tags$em("Condition")), ",", tags$strong(tags$em("State")), ",and two or more", tags$strong(tags$em("Hospitals")), "that you would like to compare."),
                 tags$p("If a hospital you selected does not appear after you have selected it, that hospital does not treat your selected condition."),
+                tags$p("If you need to change your selected condition, please reselect your state and hospital choices."),
                 fixedRow(
                   column(4, selectInput("condition", label = h3("Condition"),
                                         choices = unique(hospitals$condition),
