@@ -62,6 +62,28 @@ ui <- fluidPage(
     ) 
   )
     ),
+  tabPanel("Graphs",
+           tabsetPanel(
+             tabPanel("Payment",
+                      fixedRow(
+                        column(11, offset = 1, plotOutput(outputId = "bar4", height = "800px"),
+                               tags$p("     "),
+                               tags$p("     "),
+                               tags$hr("    "),
+                               tags$p("     "),
+                               tags$p("     ")))),
+             tabPanel("Coverage",
+                      fixedRow(
+                        column(11, offset = 1, plotOutput(outputId = "bar5", height = "800px"),
+                               tags$p("     "),
+                               tags$p("     "),
+                               tags$hr("    "),
+                               tags$p("     "),
+                               tags$p("     ")))),
+             tabPanel("Medicare",
+                      fixedRow(
+                        column(11, offset =1, plotOutput(outputId = "bar6", height = "800px"))
+                      )))),
   tabPanel("Cost Comparison",
            fixedRow(
              column(3, selectizeInput("state1", label = h3("State"),
@@ -115,6 +137,36 @@ server <- function(input,output) {
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state1) %>%
       filter(name.x %in% input$hospital) %>%
+      ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+    
+  })
+  output$bar4 <- renderPlot({
+    combined1 %>%
+      filter(DRG.Definition %in% input$condition) %>%
+      filter(Provider.State %in% input$state) %>%
+      ##filter(name.x %in% input$hospital) %>%
+      ggplot(aes(name.x, Average.Total.Payments, fill = Average.Total.Payments)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+    
+    
+  })
+  output$bar5 <- renderPlot({
+    combined1 %>%
+      filter(DRG.Definition %in% input$condition) %>%
+      filter(Provider.State %in% input$state) %>%
+      ##filter(name.x %in% input$hospital) %>%
+      ggplot(aes(name.x, Average.Covered.Charges, fill = Average.Covered.Charges)) + 
+      geom_bar(stat = "identity", alpha = 0.8) + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
+  })
+  output$bar6 <- renderPlot({
+    combined1 %>%
+      filter(DRG.Definition %in% input$condition) %>%
+      filter(Provider.State %in% input$state) %>%
+      ##filter(name.x %in% input$hospital) %>%
       ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none")
