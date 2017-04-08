@@ -5,10 +5,8 @@ library(tidyr)
 library(shiny)
 library(readxl)
 library(shinythemes)
-##Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
 library(readr)
-##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
-#calling all packages and datasets necessary for app
+
 combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
 
 hospitals <- data.frame(lat = combined1$lat,
@@ -44,8 +42,11 @@ ui <- fluidPage(
     tabPanel("Map",
       fluidRow(
         column(11, offset=1, tags$h1(
-          tags$strong("Hospital Locator")
-    )),
+          tags$strong("Hospital Locator")),
+          tags$p("After filling out the panel to the right, locate your local hospitals by clicking on the map near your region."),
+          tags$p("If you click on a specific hospital, information on that hospital's average total cost, average total insurance coverage, and average Medicare coverage for the selected condition will appear.")
+          
+    ),
     column(8,
            leafletOutput(outputId = "map", height = "800px")),
     
@@ -63,8 +64,15 @@ ui <- fluidPage(
   )
     ),
   tabPanel("Graphs",
+            tags$h1(tags$strong("Statewide Comparisons")),
+            tags$p("   "),
+           tags$h4("The three tabs below each contain a graph showing all the hospitals within the state you selected using the", tags$em("Map"),"tab that treat the condition you selected using the", tags$em("Map"), "tab."),
+           tags$p("If you would like to compare the", tags$em("Average Total Payment"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Payment"), "tab."),
+           tags$p("If you would like to compare the", tags$em("Average Total Insurance Coverage"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Insurance"), "tab."),
+           tags$p("If you would like to compare the", tags$em("Average Medicare Coverage"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Medicare"), "tab."),
            tabsetPanel(
              tabPanel("Payment",
+                      tags$h2("Average Total Payment"),
                       fixedRow(
                         column(11, offset = 1, plotOutput(outputId = "bar4", height = "800px"),
                                tags$p("     "),
@@ -72,7 +80,8 @@ ui <- fluidPage(
                                tags$hr("    "),
                                tags$p("     "),
                                tags$p("     ")))),
-             tabPanel("Coverage",
+             tabPanel("Insurance",
+                      tags$h2("Average Total Insurance Coverage"),
                       fixedRow(
                         column(11, offset = 1, plotOutput(outputId = "bar5", height = "800px"),
                                tags$p("     "),
@@ -82,6 +91,7 @@ ui <- fluidPage(
                                tags$p("     ")))),
              tabPanel("Medicare",
                       fixedRow(
+                        tags$h2("Average Medicare Coverage"),
                         column(11, offset =1, plotOutput(outputId = "bar6", height = "800px"))
                       )))),
   tabPanel("Cost Comparison",
