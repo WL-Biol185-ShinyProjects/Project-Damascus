@@ -7,7 +7,7 @@ library(readxl)
 library(shinythemes)
 library(shinydashboard)
 library(readr)
-combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
+combined1 <- read.csv(file = "data/combined1.csv")
 
 hospitals <- data.frame(lat = combined1$lat,
                         lon = combined1$lon,
