@@ -31,8 +31,8 @@ ui <- dashboardPage(
   dashboardSidebar(sidebarMenu(
     menuItem("Title Page", tabName = "title", icon = icon("home")),
     menuItem("Hospital Map", tabName = "map", icon = icon("location-arrow")),
-    menuItem("Statewide Comparisons", tabName = "statecomp", icon = icon("bar-chart")),
-    menuItem("Selective Comparisons", tabName = "hospitalcomp", icon = icon("hospital-o")),
+    menuItem("Statewide Graphical Comparisons", tabName = "statecomp", icon = icon("bar-chart")),
+    menuItem("Selective Graphical Comparisons", tabName = "hospitalcomp", icon = icon("hospital-o")),
     menuItem("References", tabName = "references", icon = icon("file-text"))
   )),
   dashboardBody(
@@ -46,13 +46,21 @@ ui <- dashboardPage(
               tags$p(""),
               tags$p(tags$h4("Additionally, we have provided information of the average amount a patient pays for their condition at any given hospital, alongwith similar information about insurance coverage and medicare coverage.", align = "center")),
               tags$p(""),
-              tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center"))
-      ),
+              tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center")),
+              tags$br(""),
+              tags$br(""),
+              tags$br(""),
+              tags$h4("Created by Thomas Caldwell and Chris Myers.", align = "center")
+              ),
       tabItem(tabName = "map",
               fluidRow(
-                column(11, offset=1, tags$h1(
-                  tags$strong("Hospital Map")
-                )),
+                column(11, offset=1, 
+                       tags$h1(
+                  tags$strong("Hospital Map")),
+                  tags$p("After filling out the panel to the right, locate your local hospitals by clicking on the map near your region."),
+                  tags$p("If you click on a specific hospital, information on that hospital's average total cost, average total insurance coverage, and average Medicare coverage for the selected condition will appear.")
+                  
+                ),
                 column(8,
                        leafletOutput(outputId = "map", height = "800px")),
                 column(4,
@@ -105,13 +113,14 @@ ui <- dashboardPage(
                 tags$h4("Please select your", tags$strong(tags$em("Condition")), ",", tags$strong(tags$em("State")), ",and two or more", tags$strong(tags$em("Hospitals")), "that you would like to compare."),
                 tags$p("If a hospital you selected does not appear after you have selected it, that hospital does not treat your selected condition."),
                 fixedRow(
+                  column(4, selectInput("condition", label = h3("Condition"),
+                                        choices = unique(hospitals$condition),
+                                        selected = NULL)),
                   column(3, selectizeInput("state1", label = h3("State"),
                                            choices = unique(hospitals$state), "State",
                                            selected = 1, multiple = TRUE)),
-                  column(3, uiOutput("hospital")),
-                  column(4, selectInput("condition", label = h3("Condition"),
-                                        choices = unique(hospitals$condition),
-                                        selected = NULL))),  
+                  column(3, uiOutput("hospital"))
+                  ),  
                 fluidRow(
                   tabBox(width = 11,
                          tabPanel("Payment",
@@ -172,7 +181,7 @@ server <- function(input,output) {
       filter(DRG.Definition %in% input$condition) %>%
       filter(Provider.State %in% input$state1) %>%
       filter(name.x %in% input$hospital) %>%
-      ggplot(aes(name.x, Average.Medicare.Payments, fill = "blue")) + 
+      ggplot(aes(name.x, Average.Medicare.Payments, fill = Average.Medicare.Payments)) + 
       geom_bar(stat = "identity", alpha = 0.8) + 
       theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(legend.position = "none") + labs(x="Hospital Name", y="Medicare Coverage (USD)")
     
