@@ -5,6 +5,7 @@ library(tidyr)
 library(shiny)
 library(readxl)
 library(shinythemes)
+library(shinydashboard)
 ##Mapping <- read_excel("~/Project-Damascus/data/Mapping.xlsx")
 library(readr)
 ##money_right <- read_csv("~/Project-Damascus/data/money-right.csv")
@@ -87,13 +88,14 @@ ui <- fluidPage(
   tabPanel("Cost Comparison",
            fixedRow(
              column(3, selectizeInput("state1", label = h3("State"),
-                                                     choices = unique(hospitals$state), "State",
-                                                     selected = 1, multiple = TRUE)),
+                                      choices = unique(hospitals$state), "State",
+                                      selected = 1, multiple = TRUE)),
              column(3, uiOutput("hospital")),
              column(4, selectInput("condition", label = h3("Condition"),
-                                      choices = unique(hospitals$condition),
-                                      selected = NULL)),
-              tabsetPanel(
+                                   choices = unique(hospitals$condition),
+                                   selected = NULL)),  
+           fluidRow(
+              tabBox(width = 11,
                 tabPanel("Payment",
                        fixedRow(
                          column(11, offset = 1, plotOutput(outputId = "bar", height = "600px")))
@@ -109,7 +111,7 @@ ui <- fluidPage(
               )
             ))
            )
-)
+))
 #this is just creating space for the graph when we make it.
 server <- function(input,output) {
   output$bar <- renderPlot({
