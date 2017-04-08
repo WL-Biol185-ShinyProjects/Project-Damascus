@@ -31,15 +31,18 @@ ui <- fluidPage(
   navlistPanel(
     tabPanel("Hospital Locator",
              tags$h2("Welcome to the", tags$h1(tags$strong("Hospital Locator"), align = "center"), align = "center"),
-             tags$p("   "),
              HTML('<center><img src="Hospital.png" width = "400" height = "400"></center>'),
              tags$p(tags$h2("Our Mission:", align = "center"),
                     tags$h4("We created this app so that you can become an informed consumer when paying for your healthcare. By selecting your condition and your state, you can see all the hospitals in your area that treat that condition.", align = "center")),
-             tags$p(""),
              tags$p(tags$h4("Additionally, we have provided information of the average amount a patient pays for their condition at any given hospital, alongwith similar information about insurance coverage and medicare coverage.", align = "center")),
-             tags$p(""),
-             tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center"))
-    ),
+             tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center")),
+             tags$br(""),
+             tags$br(""),
+             tags$br(""),
+             tags$br(""),
+             tags$br(""),
+             tags$h4("Created by Thomas Caldwell and Chris Myers.", align = "center")
+             ),
     tabPanel("Hospital Locator Map",
       fluidRow(
         column(11, offset=1, tags$h1(
@@ -66,7 +69,7 @@ ui <- fluidPage(
     ),
   tabPanel("Statewide Graphical Comparisons",
             tags$h1(tags$strong("Statewide Graphical Comparisons")),
-            tags$p("   "),
+            tags$br("   "),
            tags$h4("The three tabs below each contain a graph showing all the hospitals within the state you selected using the", tags$em("Map"),"tab that treat the condition you selected using the", tags$em("Map"), "tab."),
            tags$p("If you would like to compare the", tags$em("Average Total Payment"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Payment"), "tab."),
            tags$p("If you would like to compare the", tags$em("Average Total Insurance Coverage"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Insurance"), "tab."),
@@ -75,29 +78,21 @@ ui <- fluidPage(
              tabPanel("Payment",
                       tags$h2("Average Total Payment"),
                       fixedRow(
-                        column(11, offset = 1, plotOutput(outputId = "bar4", height = "800px"),
-                               tags$p("     "),
-                               tags$p("     "),
-                               tags$hr("    "),
-                               tags$p("     "),
-                               tags$p("     ")))),
+                        column(11, offset = 1, plotOutput(outputId = "bar4", height = "800px")
+                               ))),
              tabPanel("Insurance",
                       tags$h2("Average Total Insurance Coverage"),
                       fixedRow(
-                        column(11, offset = 1, plotOutput(outputId = "bar5", height = "800px"),
-                               tags$p("     "),
-                               tags$p("     "),
-                               tags$hr("    "),
-                               tags$p("     "),
-                               tags$p("     ")))),
+                        column(11, offset = 1, plotOutput(outputId = "bar5", height = "800px")
+                        ))),
              tabPanel("Medicare",
                       fixedRow(
                         tags$h2("Average Medicare Coverage"),
                         column(11, offset =1, plotOutput(outputId = "bar6", height = "800px"))
                       )))),
   tabPanel("Selective Graphical Comparisons",
-           tags$h1("Selective Graphical Comparisons"),
-           tags$p("   "),
+           tags$h1(tags$strong("Selective Graphical Comparisons")),
+           tags$br("   "),
            wellPanel(
              tags$h4("Please select your", tags$strong(tags$em("Condition")), ",", tags$strong(tags$em("State")), ",and two or more", tags$strong(tags$em("Hospitals")), "that you would like to compare."),
              tags$p("If a hospital you selected does not appear after you have selected it, that hospital does not treat your selected condition."),
@@ -129,7 +124,18 @@ ui <- fluidPage(
                         column(11, offset = 1, plotOutput(outputId = "bar3", height = "600px")))
                       )
               )
-            ))
+            )),
+  tabPanel("References",
+  tags$h1(tags$strong("References"), align = "center"),
+  tags$br("   "),
+  tags$h3("Data", align = "center"),
+  tags$p("To view the original dataset from which we created this app, click", tags$a("here",href = "https://data.cms.gov/Medicare-Inpatient/Inpatient-Prospective-Payment-System-IPPS-Provider/97k6-zzx3"), ".", align = "center"),
+  tags$p("For the purpose of analysis we have modified the dataset, but have maintained the integrity of the data through keeping all observations throughout all of our manipulations.", align = "center"),
+   tags$br("    "),
+  tags$h3("Special Thanks", align = "center"),
+  tags$p("We would like to extend our thanks to Professor Whitworth; without him, we would not have created any of this.", align = "center"),
+  HTML('<center><img src="whitworthg.png" width = "400" height = "400"></center>')
+           )
            )
 )
 
