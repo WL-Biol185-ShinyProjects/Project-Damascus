@@ -5,6 +5,7 @@ library(tidyr)
 library(shiny)
 library(readxl)
 library(shinythemes)
+library(shinydashboard)
 library(readr)
 
 combined1 <- read.csv(file = "~/Project-Damascus/data/combined1.csv")
@@ -27,8 +28,8 @@ hospitals$labels = paste("Name: ", hospitals$place, "<br>",
 
 ui <- fluidPage(
   theme = shinytheme("spacelab"),
-  tabsetPanel(
-    tabPanel("Title Page",
+  navlistPanel(
+    tabPanel("Hospital Locator",
              tags$h2("Welcome to the", tags$h1(tags$strong("Hospital Locator"), align = "center"), align = "center"),
              tags$p("   "),
              HTML('<center><img src="Hospital.png" width = "400" height = "400"></center>'),
@@ -39,10 +40,10 @@ ui <- fluidPage(
              tags$p(""),
              tags$p(tags$h4("If you would like to directly compare two or more hospitals, please click on the", tags$em("Cost Comparison"), "link in the navigation bar.", align = "center"))
     ),
-    tabPanel("Map",
+    tabPanel("Hospital Locator Map",
       fluidRow(
         column(11, offset=1, tags$h1(
-          tags$strong("Hospital Locator")),
+          tags$strong("Hospital Locator Map")),
           tags$p("After filling out the panel to the right, locate your local hospitals by clicking on the map near your region."),
           tags$p("If you click on a specific hospital, information on that hospital's average total cost, average total insurance coverage, and average Medicare coverage for the selected condition will appear.")
           
@@ -63,8 +64,8 @@ ui <- fluidPage(
     ) 
   )
     ),
-  tabPanel("Graphs",
-            tags$h1(tags$strong("Statewide Comparisons")),
+  tabPanel("Statewide Graphical Comparisons",
+            tags$h1(tags$strong("Statewide Graphical Comparisons")),
             tags$p("   "),
            tags$h4("The three tabs below each contain a graph showing all the hospitals within the state you selected using the", tags$em("Map"),"tab that treat the condition you selected using the", tags$em("Map"), "tab."),
            tags$p("If you would like to compare the", tags$em("Average Total Payment"), "for your chosen condition across all hospitals in your chosen state, click the", tags$em("Payment"), "tab."),
@@ -94,25 +95,36 @@ ui <- fluidPage(
                         tags$h2("Average Medicare Coverage"),
                         column(11, offset =1, plotOutput(outputId = "bar6", height = "800px"))
                       )))),
-  tabPanel("Cost Comparison",
-           fixedRow(
-             column(3, selectizeInput("state1", label = h3("State"),
-                                                     choices = unique(hospitals$state), "State",
-                                                     selected = 1, multiple = TRUE)),
-             column(3, uiOutput("hospital")),
-             column(4, selectInput("condition", label = h3("Condition"),
-                                      choices = unique(hospitals$condition),
-                                      selected = NULL)),
-              tabsetPanel(
+  tabPanel("Selective Graphical Comparisons",
+           tags$h1("Selective Graphical Comparisons"),
+           tags$p("   "),
+           wellPanel(
+             tags$h4("Please select your", tags$strong(tags$em("Condition")), ",", tags$strong(tags$em("State")), ",and two or more", tags$strong(tags$em("Hospitals")), "that you would like to compare."),
+             tags$p("If a hospital you selected does not appear after you have selected it, that hospital does not treat your selected condition."),
+             fixedRow(
+               column(4, selectInput("condition", label = h3("Condition"),
+                                     choices = unique(hospitals$condition),
+                                     selected = NULL)),
+               column(3, selectizeInput("state1", label = h3("State"),
+                                      choices = unique(hospitals$state), "State",
+                                      selected = 1, multiple = TRUE)),
+             column(3, uiOutput("hospital"))
+            
+             )),
+           fluidRow(
+              tabBox(width = 11,
                 tabPanel("Payment",
+                         tags$h2("Average Total Payment"),
                        fixedRow(
                          column(11, offset = 1, plotOutput(outputId = "bar", height = "600px")))
                        ),
-                tabPanel("Coverage",
+                tabPanel("Insurance",
+                         tags$h2("Average Total Insurance Coverage"),
                       fixedRow(
                          column(11, offset = 1, plotOutput(outputId = "bar2", height = "600px")))
                       ),
                 tabPanel("Medicare",
+                         tags$h2("Average Medicare Coverage"),
                        fixedRow(
                         column(11, offset = 1, plotOutput(outputId = "bar3", height = "600px")))
                       )
@@ -120,7 +132,7 @@ ui <- fluidPage(
             ))
            )
 )
-#this is just creating space for the graph when we make it.
+
 server <- function(input,output) {
   output$bar <- renderPlot({
    combined1 %>%
